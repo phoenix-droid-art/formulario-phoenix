@@ -19,7 +19,7 @@ document.getElementById('formulario').addEventListener('submit', function (e) {
         telefone: document.getElementById('telefone').value,
     };
 
-    fetch('https://formulario-phoenix-backend.vercel.app/backend/api/submit', {
+    fetch('https://formulario-phoenix-backend.vercel.app/api/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
