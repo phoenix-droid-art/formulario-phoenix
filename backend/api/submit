@@ -1,25 +1,13 @@
 export default async function handler(req, res) {
-  const origin = req.headers.origin;
-  const allowedOrigin = 'https://phoenix-newsletter.vercel.app';
-
-  if (req.method === 'OPTIONS') {
-    if (origin === allowedOrigin) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-      res.status(200).end();
-    } else {
-      res.status(403).end(); // Bloqueia outras origens
-    }
-    return;
-  }
-
-  if (origin === allowedOrigin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-
+  // CORS headers para todas as requisições
+  res.setHeader('Access-Control-Allow-Origin', 'https://phoenix-newsletter.vercel.app');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Se for preflight (OPTIONS), responde imediatamente
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
@@ -51,7 +39,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ error: 'Erro interno no servidor' });
   }
 }
