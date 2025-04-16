@@ -6,37 +6,37 @@ IMask(telefoneInput, {
 document.getElementById('formulario').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const formulario = document.getElementById('formulario-section');
-    const loading = document.getElementById('loading');
-    const confirmacao = document.getElementById('confirmacao');
+   const formulario = document.getElementById('formulario');
+const loading = document.getElementById('loading');
+const confirmacao = document.getElementById('confirmacao');
+const formSection = document.getElementById('formulario-section');
 
-    formulario.classList.add('hidden');
-    loading.classList.remove('hidden');
+formulario.addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-    const dados = {
-        nome: document.getElementById('nome').value,
-        email: document.getElementById('email').value,
-        telefone: document.getElementById('telefone').value,
-    };
+  formSection.style.display = 'none';
+  loading.classList.remove('hidden');
 
-    fetch("https://formulario-phoenix-backend.vercel.app/api/submit", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dados)
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Erro');
-        return response.json();
-    })
-    .then(() => {
-        loading.classList.add('hidden');
-        confirmacao.classList.remove('hidden');
-    })
-    .catch(() => {
-        alert("Erro ao enviar. Tente novamente.");
-        loading.classList.add('hidden');
-        formulario.classList.remove('hidden');
+  const nome = formulario.nome.value;
+  const email = formulario.email.value;
+  const telefone = formulario.telefone.value;
+
+  try {
+    const response = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, email, telefone })
     });
+
+    if (response.ok) {
+      loading.classList.add('hidden');
+      confirmacao.classList.remove('hidden');
+    } else {
+      throw new Error('Erro ao enviar o formulário');
+    }
+  } catch (err) {
+    alert('Erro ao enviar. Tente novamente.');
+    formSection.style.display = 'block';
+    loading.classList.add('hidden');
+  }
 });
